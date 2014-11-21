@@ -10,3 +10,9 @@
     - php-gd
     - php-mbstring
     - php-phpunit-PHPUnit
+
+- name: Download composer
+  get_url: url=https://getcomposer.org/composer.phar dest=/usr/bin/composer.phar
+
+- name: Set composer permissions
+  file: path=/usr/bin/composer.phar mode=0755

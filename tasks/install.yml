@@ -1,0 +1,12 @@
+---
+- name: Install the required php packages
+  yum: name={{ item }} state=present enablerepo=remi
+  with_items:
+    - php-mcrypt
+    - php-pdo
+    - php-mysql
+    - php-sqlite
+    - php-pgsql
+    - php-gd
+    - php-mbstring
+    - php-phpunit-PHPUnit

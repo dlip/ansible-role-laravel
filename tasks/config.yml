@@ -1,0 +1,25 @@
+---
+- name: Set up db config
+  template: src=database.php.j2 dest="{{laravel_root}}/app/config/database.php"
+
+- name: Set up laravel environment
+  template: src=env.php.j2 dest="{{laravel_root}}/bootstrap/env.php"
+
+- name: Wait for migrate db server
+  shell: "nc {{item.host}} {{item.service_port}}"
+  register: result
+  until: result.stdout.find("service up") != -1
+  retries: 36
+  delay: 5
+  with_items: laravel_db.connections
+  when: item.migrate is defined and item.migrate == true and item.service_port is defined
+
+- name: Migrate DB
+  shell: "{{laravel_root}}/artisan migrate --no-interaction --database={{item.name}}"
+  with_items: laravel_db.connections
+  when: item.migrate is defined and item.migrate == true
+
+- name: Run seeds
+  shell: "{{laravel_root}}/artisan db:seed --no-interaction --database={{item.name}}"
+  with_items: laravel_db.connections
+  when: item.seed is defined and item.seed == true

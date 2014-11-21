@@ -1,2 +1,17 @@
 ---
-# defaults file for laravel
+laravel_env: production
+laravel_root: /app
+laravel_db:
+  connections:
+    - name:     pgsql
+      driver:   pgsql
+      host:     postgresql_1   
+      database: database       
+      username: username       
+      password: password       
+      charset:  utf8           
+      prefix:   ''             
+      schema:   public
+      migrate:  true           
+      seeds:  true
+      service_port: 9811

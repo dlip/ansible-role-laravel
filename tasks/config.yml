@@ -5,6 +5,13 @@
 - name: Set up laravel environment
   template: src=env.php.j2 dest="{{laravel_root}}/bootstrap/env.php"
 
+- name: Create environment folder
+  file: path="{{laravel_root}}/app/config/{{laravel_env}}" state=directory
+
+- name: Set up extra lavarel config
+  template: src=laravel_config.php.j2 dest="{{laravel_root}}/app/config/{{laravel_env}}/{{item.key}}.php"
+  with_dict: laravel_config
+
 - name: Wait for migrate db server
   shell: "nc {{item.host}} {{item.service_port}}"
   register: result

@@ -15,3 +15,5 @@ laravel_db:
       migrate:  true           
       seeds:  true
       service_port: 9811
+
+laravel_config: {}

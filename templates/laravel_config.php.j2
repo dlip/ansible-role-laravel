@@ -1,0 +1,21 @@
+<?php
+
+return array(
+{%- for k, v in item.value.items() recursive %}
+
+  '{{k}}' => 
+  {%- if v is string %}
+    {%- if 'PHP:' in v %}
+      {{v|replace('PHP:', '')}}
+    {% else %}
+      '{{v}}'
+    {% endif %},
+  {%- else %}
+    array(
+      {{ loop(v.items()) }}
+    ),
+  {%- endif %}
+
+{%- endfor %}
+
+);

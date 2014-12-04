@@ -5,15 +5,16 @@ laravel_db:
   connections:
     - name:     pgsql
       driver:   pgsql
-      host:     postgresql_1   
-      database: database       
-      username: username       
-      password: password       
-      charset:  utf8           
-      prefix:   ''             
+      host:     postgresql_1
+      database: database
+      username: username
+      password: password
+      charset:  utf8
+      prefix:   ''
       schema:   public
-      migrate:  true           
+      migrate:  true
       seeds:  true
+      seeder: DatabaseSeeder
       service_port: 9811
 
 laravel_config: {}

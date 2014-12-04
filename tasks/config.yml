@@ -27,6 +27,6 @@
   when: item.migrate is defined and item.migrate == true
 
 - name: Run seeds
-  shell: "{{laravel_root}}/artisan db:seed --no-interaction --database={{item.name}}"
+  shell: "{{laravel_root}}/artisan db:seed --no-interaction --database={{item.name}} --class={{item.seeder|default('DatabaseSeeder')}}"
   with_items: laravel_db.connections
   when: item.seed is defined and item.seed == true

@@ -19,7 +19,7 @@
   retries: 36
   delay: 5
   with_items: laravel_db.connections
-  when: item.migrate is defined and item.migrate == true and item.service_port is defined
+  when: item.service_port is defined
 
 - name: Migrate DB
   shell: "{{laravel_root}}/artisan migrate --no-interaction --database={{item.name}}"

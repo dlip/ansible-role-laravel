@@ -1,20 +1,29 @@
 ---
 laravel_env: production
 laravel_root: /app
-laravel_db:
-  connections:
-    - name:     pgsql
-      driver:   pgsql
-      host:     postgresql_1
-      database: database
-      username: username
-      password: password
-      charset:  utf8
-      prefix:   ''
-      schema:   public
-      migrate:  true
-      seeds:  true
-      seeder: DatabaseSeeder
-      service_port: 9811
+
+laravel_migrate: []
+  #- name: pgsql
+    #host: postgresql_1
+    #service_port: 9811
+
+laravel_seed: []
+  #- name: pgsql
+    #host: postgresql_1
+    #seeder: DatabaseSeeder
+    #service_port: 9811
+
+laravel_maintenance: true
 
 laravel_config: {}
+  #production/database:
+    #connections:
+      #pgsql:
+        #driver:   pgsql
+        #host:     postgresql_1
+        #database: database
+        #username: username
+        #password: password
+        #charset:  utf8
+        #prefix:   ''
+        #schema:   public

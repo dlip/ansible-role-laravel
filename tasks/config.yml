@@ -5,11 +5,12 @@
 - name: Set up laravel environment
   template: src=env.php.j2 dest="{{laravel_root}}/bootstrap/env.php"
 
-- name: Create environment folder
-  file: path="{{laravel_root}}/app/config/{{laravel_env}}" state=directory
+- name: Create config directories
+  file: path={{laravel_root}}/app/config/{{item.key | dirname}} state=directory
+  with_dict: laravel_config
 
 - name: Set up extra lavarel config
-  template: src=laravel_config.php.j2 dest="{{laravel_root}}/app/config/{{laravel_env}}/{{item.key}}.php"
+  template: src=laravel_config.php.j2 dest="{{laravel_root}}/app/config/{{item.key}}.php"
   with_dict: laravel_config
 
 - name: Wait for migrate db server
@@ -18,15 +19,42 @@
   until: result.stdout.find("service up") != -1
   retries: 36
   delay: 5
-  with_items: laravel_db.connections
+  with_items: laravel_migrate
   when: item.service_port is defined
+
+- name: Put site in maintence mode for migrate
+  shell: "{{laravel_root}}/artisan down"
+  with_items: laravel_migrate
+  when: laravel_maintenance
+
+- name: Put site in maintence mode for seeds
+  shell: "{{laravel_root}}/artisan down"
+  with_items: laravel_seed
+  when: laravel_maintenance
 
 - name: Migrate DB
   shell: "{{laravel_root}}/artisan migrate --no-interaction --database={{item.name}}"
-  with_items: laravel_db.connections
-  when: item.migrate is defined and item.migrate == true
+  with_items: laravel_migrate
+
+- name: Wait for seed db server
+  shell: "nc {{item.host}} {{item.service_port}}"
+  register: result
+  until: result.stdout.find("service up") != -1
+  retries: 36
+  delay: 5
+  with_items: laravel_seed
+  when: item.service_port is defined
 
 - name: Run seeds
   shell: "{{laravel_root}}/artisan db:seed --no-interaction --database={{item.name}} --class={{item.seeder|default('DatabaseSeeder')}}"
-  with_items: laravel_db.connections
-  when: item.seed is defined and item.seed == true
+  with_items: laravel_seed
+
+- name: Put site out of maintence mode for migrate
+  shell: "{{laravel_root}}/artisan up"
+  with_items: laravel_migrate
+  when: laravel_maintenance
+
+- name: Put site out of maintence mode for seeds
+  shell: "{{laravel_root}}/artisan up"
+  with_items: laravel_seed
+  when: laravel_maintenance

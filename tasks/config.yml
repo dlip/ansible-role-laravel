@@ -33,7 +33,7 @@
   when: laravel_maintenance
 
 - name: Migrate DB
-  shell: "{{laravel_root}}/artisan migrate --no-interaction --database={{item.name}}"
+  shell: "{{laravel_root}}/artisan migrate --no-interaction --force --database={{item.name}}"
   with_items: laravel_migrate
 
 - name: Wait for seed db server
@@ -46,7 +46,7 @@
   when: item.service_port is defined
 
 - name: Run seeds
-  shell: "{{laravel_root}}/artisan db:seed --no-interaction --database={{item.name}} --class={{item.seeder|default('DatabaseSeeder')}}"
+  shell: "{{laravel_root}}/artisan db:seed --no-interaction --force --database={{item.name}} --class={{item.seeder|default('DatabaseSeeder')}}"
   with_items: laravel_seed
 
 - name: Put site out of maintence mode for migrate
